@@ -8,6 +8,10 @@ namespace ArcaneArena.Entity.Character.Enemy
 {
     public class ArenaEnemy : ArenaCharacter
     {
+        private const float visibilityCheckRate = 0.5f;
+
+        private float visibilityCheckTimer = 0f;
+
         [SerializeField] private Transform uiReference;
 
         private CharacterAttributeUI enemyAttributeUI;
@@ -15,6 +19,8 @@ namespace ArcaneArena.Entity.Character.Enemy
         private bool uiInitialized = false;
 
         private Camera mainCamera;
+
+        public bool HasLineOfSight { get; private set; }
 
         public ArenaPlayer PlayerTarget { get; protected set; }
 
@@ -48,6 +54,13 @@ namespace ArcaneArena.Entity.Character.Enemy
             }
         }
 
+        protected override void Update()
+        {
+            base.Update();
+
+            HasLineOfSight = !Physics.Linecast( transform.position + Vector3.up, PlayerTarget.transform.position + Vector3.up, Constants.Arena.EnvironmentLayerMask, QueryTriggerInteraction.Ignore );
+        }
+
         private void FixedUpdate()
         {
             SetAttributeUIPosition();
@@ -68,5 +81,17 @@ namespace ArcaneArena.Entity.Character.Enemy
                 EnemyUIManager.Instance.UnSubscribe( this );
             }
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            if ( PlayerTarget != null )
+            {
+                Gizmos.color = Color.yellow;
+
+                Gizmos.DrawLine( transform.position + Vector3.up, PlayerTarget.transform.position + Vector3.up );
+            }
+        }
+#endif
     }
 }

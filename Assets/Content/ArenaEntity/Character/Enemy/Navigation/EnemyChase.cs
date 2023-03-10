@@ -5,18 +5,26 @@ namespace ArcaneArena.Entity.Character.Enemy
 {
     public class EnemyChase : EnemyNavigation
     {
-        [SerializeField] private float stoppingDistance = 0.5f;
+        [SerializeField] protected float stoppingDistance = 0.5f;
+
+        protected float defaultStoppingDistance = 0.5f;
 
         private bool inRange = false;
 
         private void Start()
         {
             navPath = new NavMeshPath();
+
+            defaultStoppingDistance = stoppingDistance;
+        }
+        protected virtual void SetGoalDestination()
+        {
+            goalDestination = goalLookTarget = Character.PlayerTarget.transform.position;
         }
 
         protected override void ProcessNavigation()
         {
-            goalDestination = goalLookTarget = Character.PlayerTarget.transform.position;
+            SetGoalDestination();
 
             movementVector = Vector3.zero;
 

@@ -7,7 +7,7 @@ namespace ArcaneArena.Entity.Character.Enemy
 {
     public abstract class EnemyNavigation : CharacterComponent<ArenaEnemy>
     {
-        [SerializeField] private float navigationTickRate = 0.2f;
+        [SerializeField] protected float navigationTickRate = 0.2f;
 
         [SerializeField] protected CharacterMovement movement;
 
@@ -37,38 +37,41 @@ namespace ArcaneArena.Entity.Character.Enemy
 
         protected virtual void FixedUpdate()
         {
-            if ( character.CanMove )
+            if ( character != null )
             {
-                if ( character.Rigidbody.isKinematic )
+                if ( character.CanMove )
                 {
-                    character.Rigidbody.isKinematic = false;
+                    if ( character.Rigidbody.isKinematic )
+                    {
+                        character.Rigidbody.isKinematic = false;
 
-                    character.Rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                        character.Rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    }
+
+                    character.Rigidbody.AddForce( movementVector * movement.acceleration * Time.fixedDeltaTime, ForceMode.VelocityChange );
+
+                    if ( character.Rigidbody.velocity.sqrMagnitude >= movement.maxSpeed * movement.maxSpeed )
+                        character.Rigidbody.velocity = Vector3.ClampMagnitude( character.Rigidbody.velocity, movement.maxSpeed );
+
+                    Vector3 toLookTarget = goalLookTarget - character.transform.position;
+
+                    toLookTarget.y = 0;
+
+                    character.transform.rotation = Quaternion.RotateTowards( character.transform.rotation, Quaternion.LookRotation( toLookTarget, Vector3.up ), movement.turnSpeed * Time.fixedDeltaTime );
                 }
-
-                character.Rigidbody.AddForce( movementVector * movement.acceleration * Time.fixedDeltaTime, ForceMode.VelocityChange );
-
-                if ( character.Rigidbody.velocity.sqrMagnitude >= movement.maxSpeed * movement.maxSpeed )
-                    character.Rigidbody.velocity = Vector3.ClampMagnitude( character.Rigidbody.velocity, movement.maxSpeed );
-
-                Vector3 toLookTarget = goalLookTarget - character.transform.position;
-
-                toLookTarget.y = 0;
-
-                character.transform.rotation = Quaternion.RotateTowards( character.transform.rotation, Quaternion.LookRotation( toLookTarget, Vector3.up ), movement.turnSpeed * Time.fixedDeltaTime );
+                else
+                {
+                    if ( character.State == CharacterState.HeavyCasting && !character.Rigidbody.isKinematic )
+                    {
+                        character.Rigidbody.isKinematic = true;
+                    }
+                }
 
                 Vector3 localVel = character.transform.InverseTransformVector( character.Rigidbody.velocity );
 
                 character.Animator.SetFloat( CharacterAnimationParams.MoveX, localVel.x / movement.maxSpeed );
 
                 character.Animator.SetFloat( CharacterAnimationParams.MoveY, localVel.z / movement.maxSpeed );
-            }
-            else
-            {
-                if ( character.State == CharacterState.HeavyCasting && !character.Rigidbody.isKinematic )
-                {
-                    character.Rigidbody.isKinematic = true;
-                }
             }
         }
 
