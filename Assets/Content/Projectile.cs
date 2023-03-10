@@ -23,10 +23,14 @@ public class Projectile : PooledObject
 
     private float currentSpeed = 0f;
 
+    private LayerMask hittableMask;
+
     private IHittable owner;
 
-    public void SetOwner( IHittable newOwner )
+    public void Configure( LayerMask targetLayerMask, IHittable newOwner )
     {
+        hittableMask = targetLayerMask;
+
         owner = newOwner;
     }
 
@@ -51,7 +55,7 @@ public class Projectile : PooledObject
 
         Vector3 rayStartPosition = transform.position - ( transform.forward * Mathf.Min( travelledDistance, distanceChunk ) );
 
-        if ( Physics.Raycast( rayStartPosition, transform.forward, out collisionRayHit, 2 * distanceChunk, Constants.Projectile.CollisionLayerMask, QueryTriggerInteraction.Ignore ) )
+        if ( Physics.Raycast( rayStartPosition, transform.forward, out collisionRayHit, 2 * distanceChunk, hittableMask, QueryTriggerInteraction.Ignore ) )
         {
             if ( collisionRayHit.collider.TryGetComponent( out IHittable hittable ) )
             {
@@ -130,7 +134,7 @@ public class Projectile : PooledObject
         base.Returned();
     }
 
-    public static Projectile Spawn( GameObject projectilePrefab, Vector3 spawnPosition, Vector3 direction, IHittable owner = null )
+    public static Projectile Spawn( GameObject projectilePrefab, Vector3 spawnPosition, Vector3 direction, LayerMask targetLayerMask, IHittable owner = null )
     {
         GameObject go = ObjectPoolManager.Instance.GetPooled( projectilePrefab );
 
@@ -148,7 +152,7 @@ public class Projectile : PooledObject
 
                 projectileInstance.transform.forward = direction;
 
-                projectileInstance.SetOwner( owner );
+                projectileInstance.Configure( targetLayerMask, owner );
             }
 
             return projectileInstance;

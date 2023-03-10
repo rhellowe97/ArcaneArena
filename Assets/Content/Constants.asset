@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418071715024ad645a3fad5800543ea9, type: 3}
   m_Name: Constants
   m_EditorClassIdentifier: 
-  projectile:
-    collisionLayerMask:
+  arena:
+    environmentLayerMask:
       serializedVersion: 2
-      m_Bits: 129
+      m_Bits: 1

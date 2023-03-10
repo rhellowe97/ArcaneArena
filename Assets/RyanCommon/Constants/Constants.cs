@@ -10,13 +10,13 @@ public class Constants : ScriptableObject
     private static Constants Data => ConstantsSingleton.Data;
 
     [Serializable]
-    public class ProjectileConstants
+    public class ArenaConstants
     {
-        [SerializeField] protected LayerMask collisionLayerMask;
-        public LayerMask CollisionLayerMask => collisionLayerMask;
+        [SerializeField] protected LayerMask environmentLayerMask;
+        public LayerMask EnvironmentLayerMask => environmentLayerMask;
     }
 
     [Title( "Projectile" )]
-    [SerializeField] protected ProjectileConstants projectile;
-    public static ProjectileConstants Projectile => Data.projectile;
+    [SerializeField] protected ArenaConstants arena;
+    public static ArenaConstants Arena => Data.arena;
 }
