@@ -38,12 +38,12 @@ namespace ArcaneArena.UI
             }
         }
 
-        private void Character_OnHealthChanged( int newHealth )
+        private void Character_OnHealthChanged( float newHealth )
         {
             healthBar.value = ( float ) newHealth / assignedCharacter.BaseAttributeData.Attributes.Health;
         }
 
-        private void Character_OnManaChanged( int newMana )
+        private void Character_OnManaChanged( float newMana )
         {
             manaBar.value = ( float ) newMana / assignedCharacter.BaseAttributeData.Attributes.Mana;
         }

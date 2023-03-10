@@ -7,8 +7,8 @@ namespace ArcaneArena.Entity
     [System.Serializable]
     public class EntityAttributes
     {
-        [SerializeField] protected int health = 100;
-        public int Health
+        [SerializeField] protected float health = 100;
+        public float Health
         {
             get => health;
             set
@@ -17,8 +17,8 @@ namespace ArcaneArena.Entity
             }
         }
 
-        [SerializeField] protected int mana = 100;
-        public int Mana
+        [SerializeField] protected float mana = 100;
+        public float Mana
         {
             get => mana;
             set
@@ -28,10 +28,10 @@ namespace ArcaneArena.Entity
         }
 
         [SerializeField] protected int manaRegen = 5;
-        public int ManaRegen => manaRegen;
+        public float ManaRegen => manaRegen;
 
         [SerializeField] protected int cooldownReduction = 0;
-        public int CooldownReduction => cooldownReduction;
+        public float CooldownReduction => cooldownReduction;
 
         [Range( 0, 1 )]
         [SerializeField] protected float airResistance = 0;
