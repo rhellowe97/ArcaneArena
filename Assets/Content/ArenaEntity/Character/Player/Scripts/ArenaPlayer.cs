@@ -1,4 +1,5 @@
 using ArcaneArena.UI;
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,13 @@ namespace ArcaneArena.Entity.Character.Player
             if ( attributeUI != null )
             {
                 attributeUI.AssignCharacter( this );
+            }
+
+            CinemachineVirtualCamera playerVCam = GetComponentInChildren<CinemachineVirtualCamera>();
+
+            if ( playerVCam != null )
+            {
+                playerVCam.transform.SetParent( null );
             }
         }
     }

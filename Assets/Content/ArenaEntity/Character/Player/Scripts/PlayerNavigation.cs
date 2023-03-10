@@ -149,12 +149,6 @@ namespace ArcaneArena.Entity.Character.Player
                     character.Rigidbody.velocity = Vector3.ClampMagnitude( character.Rigidbody.velocity, movement.maxSpeed );
 
                 character.transform.rotation = Quaternion.RotateTowards( character.transform.rotation, Quaternion.LookRotation( toLookTargetNormalized, Vector3.up ), movement.turnSpeed * Time.fixedDeltaTime );
-
-                Vector3 localVel = character.transform.InverseTransformVector( character.Rigidbody.velocity );
-
-                character.Animator.SetFloat( CharacterAnimationParams.MoveX, localVel.x / movement.maxSpeed );
-
-                character.Animator.SetFloat( CharacterAnimationParams.MoveY, localVel.z / movement.maxSpeed );
             }
             else
             {
@@ -163,6 +157,12 @@ namespace ArcaneArena.Entity.Character.Player
                     character.Rigidbody.isKinematic = true;
                 }
             }
+
+            Vector3 localVel = character.transform.InverseTransformVector( character.Rigidbody.velocity );
+
+            character.Animator.SetFloat( CharacterAnimationParams.MoveX, localVel.x / movement.maxSpeed );
+
+            character.Animator.SetFloat( CharacterAnimationParams.MoveY, localVel.z / movement.maxSpeed );
         }
 
         private void EvadeAction_Performed( InputAction.CallbackContext context )
