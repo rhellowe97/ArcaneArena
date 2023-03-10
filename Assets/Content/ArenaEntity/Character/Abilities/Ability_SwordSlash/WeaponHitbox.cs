@@ -6,13 +6,18 @@ using UnityEngine;
 namespace ArcaneArena.Entity.Character.Ability
 {
     [RequireComponent( typeof( BoxCollider ) )]
-    public class WeaponHitbox : MonoBehaviour
+    public class WeaponHitbox : MonoBehaviour, IHitConfigurable
     {
         public Action<IHittable, Vector3> OnHit;
 
         private new BoxCollider collider;
 
         private HashSet<IHittable> hits = new HashSet<IHittable>();
+
+        private IHittable owner;
+
+        private LayerMask targetLayerMask;
+
         private void Awake()
         {
             collider = GetComponent<BoxCollider>();
@@ -28,7 +33,7 @@ namespace ArcaneArena.Entity.Character.Ability
 
         private void OnTriggerEnter( Collider other )
         {
-            if ( other.TryGetComponent( out IHittable hittable ) )
+            if ( other.TryGetComponent( out IHittable hittable ) && hittable != owner && targetLayerMask == ( targetLayerMask | ( 1 << ( ( MonoBehaviour ) hittable ).gameObject.layer ) ) )
             {
                 if ( !hits.Contains( hittable ) )
                 {
@@ -37,6 +42,13 @@ namespace ArcaneArena.Entity.Character.Ability
                     OnHit?.Invoke( hittable, transform.TransformPoint( collider.center ) );
                 }
             }
+        }
+
+        public void Configure( IHittable owner, LayerMask targetLayerMask )
+        {
+            this.owner = owner;
+
+            this.targetLayerMask = targetLayerMask;
         }
     }
 }

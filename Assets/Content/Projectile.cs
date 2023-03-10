@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : PooledObject
+public class Projectile : PooledObject, IHitConfigurable
 {
     [SerializeField] protected ProjectileData data;
     public ProjectileData Data => data;
@@ -27,11 +27,11 @@ public class Projectile : PooledObject
 
     private IHittable owner;
 
-    public void Configure( LayerMask targetLayerMask, IHittable newOwner )
+    public void Configure( IHittable newOwner, LayerMask targetLayerMask )
     {
-        hittableMask = targetLayerMask;
-
         owner = newOwner;
+
+        hittableMask = targetLayerMask;
     }
 
     public void SetAimTarget( Transform target )
@@ -152,7 +152,7 @@ public class Projectile : PooledObject
 
                 projectileInstance.transform.forward = direction;
 
-                projectileInstance.Configure( targetLayerMask, owner );
+                projectileInstance.Configure( owner, targetLayerMask );
             }
 
             return projectileInstance;
