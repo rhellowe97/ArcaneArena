@@ -34,6 +34,11 @@ namespace ArcaneArena.Entity.Character
             character.OnStateChanged += Character_OnStateChanged;
         }
 
+        private void Update()
+        {
+            character.UpdateMana( character.Attributes.ManaRegen * Time.deltaTime );
+        }
+
         private void Character_OnStateChanged( CharacterState oldState, CharacterState newState )
         {
             if ( newState == CharacterState.Evading )
@@ -57,7 +62,7 @@ namespace ArcaneArena.Entity.Character
 
         private void AnimationEventHandler_OnCast()
         {
-            if ( currentAbility != null && currentAbility.Casting )
+            if ( currentAbility != null && currentAbility.Active )
                 currentAbility.Cast();
         }
 

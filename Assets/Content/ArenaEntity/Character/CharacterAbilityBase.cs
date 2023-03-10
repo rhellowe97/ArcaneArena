@@ -105,6 +105,11 @@ namespace ArcaneArena.Entity.Character.Ability
             Ready = true;
 
             Activate();
+
+            if ( !Active && !( Data.CastType == CharacterAbilityData.AbilityCastType.Repeat ) )
+            {
+                Ready = false;
+            }
         }
 
         public virtual void Activate()
@@ -120,19 +125,19 @@ namespace ArcaneArena.Entity.Character.Ability
         public virtual void BeginCast() //Cast animation has begun
         {
             if ( Data.CastType == CharacterAbilityData.AbilityCastType.Single || Data.CastType == CharacterAbilityData.AbilityCastType.Repeat )
-            {
                 Casting = true;
-            }
+
+            character.Animator.SetBool( CharacterAnimationParams.Channel, Data.CastType == CharacterAbilityData.AbilityCastType.Continuous );
         }
 
         public virtual void Cast() //Fire ability
         {
-            castTimer = 0f;
-
-            if ( Data.CastType == CharacterAbilityData.AbilityCastType.Continuous )
-            {
+            if ( !Casting && Data.CastType == CharacterAbilityData.AbilityCastType.Continuous )
                 Casting = true;
-            }
+
+            character.UpdateMana( -Data.ManaCost );
+
+            castTimer = 0f;
         }
 
         public virtual void CastEnd() //Casting is over
@@ -156,8 +161,23 @@ namespace ArcaneArena.Entity.Character.Ability
         {
             Ready = false;
 
+            if ( Active )
+            {
+                character.Animator.SetBool( CharacterAnimationParams.Channel, false );
+            }
+
             if ( interrupt )
             {
+                if ( Active )
+                {
+                    character.Animator.SetTrigger( CharacterAnimationParams.Interrupt );
+
+                    if ( character.State == Data.CharacterState )
+                    {
+                        character.SetState( CharacterState.Free );
+                    }
+                }
+
                 Active = false;
 
                 Casting = false;

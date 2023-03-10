@@ -18,30 +18,38 @@ namespace ArcaneArena.Entity
             if ( BaseAttributeData != null )
             {
                 Attributes = new EntityAttributes( BaseAttributeData.Attributes );
+
+                MaxHealth = Attributes.Health;
+
+                MaxMana = Attributes.Mana;
             }
         }
 
-        public Action<int> OnHealthChanged;
+        public float MaxHealth { get; private set; } = 0;
 
-        public Action<int> OnManaChanged;
+        public float MaxMana { get; private set; } = 0;
 
-        public void SetHealth( int delta )
+        public Action<float> OnHealthChanged;
+
+        public Action<float> OnManaChanged;
+
+        public void UpdateHealth( float delta )
         {
-            Attributes.Health = Attributes.Health + delta;
+            Attributes.Health = Mathf.Clamp( Attributes.Health + delta, 0, MaxHealth );
 
             OnHealthChanged?.Invoke( Attributes.Health );
         }
 
-        public void SetMana( int delta )
+        public void UpdateMana( float delta )
         {
-            Attributes.Mana = Attributes.Mana + delta;
+            Attributes.Mana = Mathf.Clamp( Attributes.Mana + delta, 0, MaxMana );
 
             OnManaChanged?.Invoke( Attributes.Mana );
         }
 
         public void GetHit( int damage, Vector3 hitLocation )
         {
-            SetHealth( -damage );
+            UpdateHealth( -damage );
 
             if ( Attributes.Health <= 0 )
             {
