@@ -24,6 +24,9 @@ namespace ArcaneArena.Entity.Character
         [SerializeField] protected Transform aimTarget;
         public Transform AimTarget => aimTarget;
 
+        [SerializeField] protected LayerMask targetLayerMask;
+        public LayerMask TargetLayerMask => targetLayerMask;
+
         [SerializeField] protected CharacterAnimationEventHandler animationEventHandler;
         public CharacterAnimationEventHandler AnimationEventHandler => animationEventHandler;
 
@@ -120,5 +123,7 @@ namespace ArcaneArena.Entity.Character
         public const string AttackVariation = "AttackVariation";
 
         public const string Channel = "Channel";
+
+        public const string Interrupt = "Interrupt";
     }
 }

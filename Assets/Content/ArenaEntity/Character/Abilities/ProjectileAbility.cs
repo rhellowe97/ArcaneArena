@@ -26,7 +26,7 @@ namespace ArcaneArena.Entity.Character.Ability
         {
             base.Cast();
 
-            Projectile.Spawn( projectilePrefab, source.position, GetAimDirection(), character );
+            Projectile.Spawn( projectilePrefab, source.position, GetAimDirection(), character.TargetLayerMask, character );
         }
 
         private Vector3 GetAimDirection()
