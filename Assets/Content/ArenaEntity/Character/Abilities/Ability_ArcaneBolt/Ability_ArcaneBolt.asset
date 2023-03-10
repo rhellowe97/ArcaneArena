@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guid: F69480D4DF454410BD35E85A79D129A9
   cooldown: 0.2
-  manaCost: 0
+  manaCost: 5
   castType: 1
   animType: 0
-  castState: 1
+  characterState: 1
