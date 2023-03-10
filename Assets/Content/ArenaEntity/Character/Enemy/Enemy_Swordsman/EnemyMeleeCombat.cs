@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ArcaneArena.Entity.Character.Enemy
 {
     [RequireComponent( typeof( ArenaEnemy ) )]
-    public class EnemySwordsmanCombat : CharacterCombat<ArenaEnemy>
+    public class EnemyMeleeCombat : CharacterCombat<ArenaEnemy>
     {
         [SerializeField] private float attackRange = 0.5f;
 
